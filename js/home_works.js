@@ -94,7 +94,7 @@ stopBtn.onclick = () => {
     isRunning = false;
 };
 
-// обработчик кнопки Reset
+
 resetBtn.onclick = () => {
     clearInterval(timer);
     seconds = 0;
@@ -102,10 +102,38 @@ resetBtn.onclick = () => {
     updateDisplay();
 };
 
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.querySelector('.modal');
+    const closeBtn = modal.querySelector('.modal_close');
 
-// 1) Сделать слайдер автоматическим, чтобы срабатывала каждые 5 секунд или на ваше усмотрение
-// 2) Вызывать модальное окно по скролу до конца страницы один раз. То есть если пользователь дошел до конца страницы то вызвать модальное окно один раз если он закроет его и снова прокрутит до конца страницы то вызов не должен происходить.
-// Для выполнения этой задачи вам нужно изучить метод removeEventlistener() и событие scroll
-// 3) Вызывать модальное окно через 10 секунд после открытия сайта
-// 4) Добавить всё это в проект!
+
+
+    function openModal() {
+        modal.style.display = 'block';
+    }
+
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+    closeBtn.addEventListener('click', closeModal);
+
+    function handleScroll() {
+
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            openModal();
+
+            window.removeEventListener('scroll', handleScroll);
+        }
+    }
+    window.addEventListener('scroll', handleScroll);
+
+
+    setTimeout(() => {
+        openModal();
+    }, 10000);
+});
+
+
+
+
 

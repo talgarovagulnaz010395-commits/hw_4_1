@@ -38,7 +38,7 @@ let index = 0
 
 const hideSlide = () => {
     slides.forEach((slide) => {
-        slide.style.opacity = 0
+        slide.style.opacity = 0 ;
         slide.classList.remove('active_slide')
     })
 }
@@ -53,13 +53,13 @@ showSlide(index)
 
 const autoSlider = (i = 0) => {
     setInterval(() => {
-        i++
+        i++ ;
         if (i > slides.length - 1) {
-            i = 0
+            i = 0 ;
         }
-        hideSlide()
-        showSlide(i)
-    }, 10000)
+        hideSlide();
+        showSlide(i);
+    }, 4000);
 }
 
 next.onclick = () => {
