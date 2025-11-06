@@ -38,10 +38,11 @@ const countTwo = () => {
 
 // console.log(news.match(regExp));
 
-
 const tabBlocks = document.querySelectorAll('.tab_content_block');
 const tabItems = document.querySelectorAll('.tab_content_item');
-const tabItemsContainer = document.querySelector('.tab_content_items'); // <- querySelector
+const tabItemsContainer = document.querySelector('.tab_content_items');
+
+let currentIndex = 0;
 
 const hideAllBlocks = () => {
   tabBlocks.forEach((block) => {
@@ -58,7 +59,21 @@ const showBlock = (index) => {
 };
 
 hideAllBlocks();
-showBlock(0);
+showBlock(currentIndex);
+
+
+const autoSlide = () => {
+  currentIndex++;
+  if (currentIndex >= tabBlocks.length) {
+    currentIndex = 0;
+  }
+  hideAllBlocks();
+  showBlock(currentIndex);
+};
+
+
+let slideInterval = setInterval(autoSlide, 5000);
+
 
 tabItemsContainer.onclick = (event) => {
   if (event.target.classList.contains('tab_content_item')) {
@@ -66,8 +81,11 @@ tabItemsContainer.onclick = (event) => {
       if (event.target === tab) {
         hideAllBlocks();
         showBlock(tabIndex);
+        currentIndex = tabIndex;
+        clearInterval(slideInterval);
+        slideInterval = setInterval(autoSlide, 5000);
       }
     });
   }
+};
 
-}
