@@ -133,6 +133,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 10000);
 });
 
+const charactersContainer = document.querySelector('.characters-list');
+
+const xhr = new XMLHttpRequest();
+xhr.open('GET', '../data/characters.json'); // путь к JSON
+xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.send();
+
+xhr.onload = function () {
+    if (xhr.status === 200) {
+        const characters = JSON.parse(xhr.responseText);
+
+        characters.forEach(person => {
+            const card = document.createElement('div');
+            card.classList.add('character-card');
+            card.innerHTML = `
+                <div class="character-photo">
+                 <img src="${person.photo}" alt="${person.name}">
+                </div>
+                  <h3>${person.name}</h3>
+                  <p><b>Возраст:</b> ${person.age}</p>
+                  <p>${person.text}</p>
+                `;
+
+            charactersContainer.appendChild(card);
+        });
+    } else {
+        console.error('Ошибка при загрузке characters.json');
+    }
+};
+
+
+const xhrBio = new XMLHttpRequest();
+xhrBio.open('GET', '../data/bio.json');
+xhrBio.setRequestHeader('Content-Type', 'application/json');
+xhrBio.send();
+
+xhrBio.onload = function () {
+    if (xhrBio.status === 200) {
+        const bio = JSON.parse(xhrBio.responseText);
+        console.log('Информация обо мне:', bio);
+    } else {
+        console.error('Ошибка при загрузке bio.json');
+    }
+};
+
+
 
 
 
