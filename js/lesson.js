@@ -3,7 +3,7 @@ const phoneButton = document.querySelector('#phone_button')
 const phoneResult = document.querySelector('#phone_result')
 
 
-const regExp = /\+996\s\d{3}\s\d{2}\-\d{2}\-\d{2}/;
+const regExp = /\+996\s\d{3}\s\d{2}-\d{2}-\d{2}/;
 
 phoneButton.onclick = () => {
   if(regExp.test(phoneInput.value)){
@@ -89,3 +89,38 @@ tabItemsContainer.onclick = (event) => {
   }
 };
 
+
+const somInput = document.querySelector('#som');
+const usdInput = document.querySelector('#usd');
+const euroInput = document.querySelector('#eur');
+
+const converter = (element,secondElement,thirdElement) => {
+  element.oninput = () => {
+  const requester = new XMLHttpRequest();
+  requester.open('GET', '../data/converter.json');
+  requester.setRequestHeader ('Content-type', 'application/json');
+  requester.send();
+  requester.onload = () => {
+    const response = JSON.parse(requester.response);
+    if (element.id === 'som') {
+      secondElement.value = (element.value / response.usd).toFixed(2);
+      thirdElement.value = (element.value / response.eur).toFixed(2);
+    } else if (element.id === 'usd') {
+      secondElement.value = (element.value * response.usd).toFixed(2);
+      thirdElement.value = (element.value * response.euroToDollar).toFixed(2);
+    } else if (element.id === 'eur') {
+      secondElement.value = (element.value * response.eur).toFixed(2);
+      thirdElement.value = (element.value / response.euroToDollar).toFixed(2);
+     }
+    (element.value === '') && (
+      secondElement.value = '',
+      thirdElement.value = ''
+    )
+
+    }
+  }
+}
+
+converter(somInput,usdInput,euroInput);
+converter(usdInput,somInput,euroInput);
+converter(euroInput,somInput,usdInput);
