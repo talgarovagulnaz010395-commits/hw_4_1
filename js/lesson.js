@@ -126,7 +126,7 @@ converter(usdInput,somInput,euroInput);
 converter(euroInput,somInput,usdInput);
 
 
-// ------------------ CARD SWITCHER (TODOS) ------------------
+
 let todoId = 1;
 const MAX_TODOS = 200;
 
@@ -146,7 +146,6 @@ function loadTodo(id) {
       .catch(err => console.error("Ошибка:", err));
 }
 
-// загрузка первой карточки при старте
 loadTodo(todoId);
 
 btnNext.onclick = () => {
