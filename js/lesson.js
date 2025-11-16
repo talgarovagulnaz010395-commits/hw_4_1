@@ -124,3 +124,38 @@ const converter = (element,secondElement,thirdElement) => {
 converter(somInput,usdInput,euroInput);
 converter(usdInput,somInput,euroInput);
 converter(euroInput,somInput,usdInput);
+
+
+// ------------------ CARD SWITCHER (TODOS) ------------------
+let todoId = 1;
+const MAX_TODOS = 200;
+
+const btnPrev = document.querySelector('#btn-prev');
+const btnNext = document.querySelector('#btn-next');
+const card = document.querySelector('.card');
+
+function loadTodo(id) {
+  fetch(`https://jsonplaceholder.typicode.com/todos/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        card.innerHTML = `
+                <h4>Todo ID: ${data.id}</h4>
+                <p>Title: ${data.title}</p>
+            `;
+      })
+      .catch(err => console.error("Ошибка:", err));
+}
+
+// загрузка первой карточки при старте
+loadTodo(todoId);
+
+btnNext.onclick = () => {
+  todoId = todoId === MAX_TODOS ? 1 : todoId + 1;
+  loadTodo(todoId);
+};
+
+btnPrev.onclick = () => {
+  todoId = todoId === 1 ? MAX_TODOS : todoId - 1;
+  loadTodo(todoId);
+};
+
