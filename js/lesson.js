@@ -157,4 +157,9 @@ btnPrev.onclick = () => {
   todoId = todoId === 1 ? MAX_TODOS : todoId - 1;
   loadTodo(todoId);
 };
+fetch('https://jsonplaceholder.typicode.com/todos')
+    .then(res => res.json())
+    .then(data => console.log("Все todos:", data))
+    .catch(err => console.error(err));
+
 
