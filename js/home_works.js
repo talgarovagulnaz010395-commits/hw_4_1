@@ -141,7 +141,7 @@ xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send();
 
 xhr.onload = function () {
-    if (xhr.status === 200) {
+    try {
         const characters = JSON.parse(xhr.responseText);
 
         characters.forEach(person => {
@@ -158,25 +158,36 @@ xhr.onload = function () {
 
             charactersContainer.appendChild(card);
         });
-    } else {
+    } catch (error) {
         console.error('Ошибка при загрузке characters.json');
     }
 };
 
 
-const xhrBio = new XMLHttpRequest();
-xhrBio.open('GET', '../data/bio.json');
-xhrBio.setRequestHeader('Content-Type', 'application/json');
-xhrBio.send();
-
-xhrBio.onload = function () {
-    if (xhrBio.status === 200) {
-        const bio = JSON.parse(xhrBio.responseText);
-        console.log('Информация обо мне:', bio);
-    } else {
-        console.error('Ошибка при загрузке bio.json');
+const getData = async()=>{
+    try {
+        const response = await fetch('../data/bio.json')
+        const data = await response.json()
+        console.log("Мои данные:",data)
     }
-};
+    catch(e){
+        console.log(e);
+    }
+
+}
+
+const getPosts = async()=>{
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts')
+        const data = await response.json()
+        console.log("Все посты:",data)
+    }catch(e){
+        console.log(e)
+    }
+
+}
+getPosts()
+getData()
 
 
 

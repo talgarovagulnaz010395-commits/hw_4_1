@@ -94,72 +94,60 @@ const somInput = document.querySelector('#som');
 const usdInput = document.querySelector('#usd');
 const euroInput = document.querySelector('#eur');
 
-const converter = (element,secondElement,thirdElement) => {
-  element.oninput = () => {
-  const requester = new XMLHttpRequest();
-  requester.open('GET', '../data/converter.json');
-  requester.setRequestHeader ('Content-type', 'application/json');
-  requester.send();
-  requester.onload = () => {
-    const response = JSON.parse(requester.response);
-    if (element.id === 'som') {
-      secondElement.value = (element.value / response.usd).toFixed(2);
-      thirdElement.value = (element.value / response.eur).toFixed(2);
-    } else if (element.id === 'usd') {
-      secondElement.value = (element.value * response.usd).toFixed(2);
-      thirdElement.value = (element.value * response.euroToDollar).toFixed(2);
-    } else if (element.id === 'eur') {
-      secondElement.value = (element.value * response.eur).toFixed(2);
-      thirdElement.value = (element.value / response.euroToDollar).toFixed(2);
-     }
-    (element.value === '') && (
-      secondElement.value = '',
-      thirdElement.value = ''
-    )
-
+const convertor = (element, targetElement, targetElement2) => {
+    element.oninput = async () => {
+        try {
+            const response = await fetch("../data/converter.json")
+            const data = await response.json()
+            if (element.id === 'som') {
+                targetElement.value = (element.value / data.usd).toFixed(2)
+                targetElement2.value = (element.value / data.euro).toFixed(2)
+            }
+            if (element.id === 'usd') {
+                targetElement.value = (element.value * data.usd).toFixed(2)
+                targetElement2.value = (element.value / data.euroToDollar).toFixed(2)
+            }
+            if (element.id === 'eur') {
+                targetElement.value = (element.value * data.euro).toFixed(2)
+                targetElement2.value = (element.value * data.euroToDollar).toFixed(2)
+            }
+            (element.value === '') && (targetElement.value = '', targetElement2.value = '')
+        } catch (error) {
+            console.log(error)
+        }
     }
-  }
 }
-
-converter(somInput,usdInput,euroInput);
-converter(usdInput,somInput,euroInput);
-converter(euroInput,somInput,usdInput);
-
+convertor(somInput, usdInput, euroInput)
+convertor(usdInput, somInput, euroInput)
+convertor(euroInput, somInput, usdInput)
 
 
-let todoId = 1;
-const MAX_TODOS = 200;
+const card = document.querySelector('.card')
+const btnContainer = document.querySelector('.inner_card_switcher')
 
-const btnPrev = document.querySelector('#btn-prev');
-const btnNext = document.querySelector('#btn-next');
-const card = document.querySelector('.card');
-
-function loadTodo(id) {
-  fetch(`https://jsonplaceholder.typicode.com/todos/${id}`)
-      .then(res => res.json())
-      .then(data => {
+let cardId = 1
+const firstCard = async () => {
+    try {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${cardId}`)
+        const data = await response.json()
         card.innerHTML = `
-                <h4>Todo ID: ${data.id}</h4>
-                <p>Title: ${data.title}</p>
-            `;
-      })
-      .catch(err => console.error("Ошибка:", err));
+            <p>${data.title}</p>   
+            <p style="color: ${data.completed ? 'green' : 'red'}">${data.completed}</p>   
+            <span>${data.id}</span>   
+            `
+    } catch (error) {
+        console.error(error)
+    }
 }
-
-loadTodo(todoId);
-
-btnNext.onclick = () => {
-  todoId = todoId === MAX_TODOS ? 1 : todoId + 1;
-  loadTodo(todoId);
-};
-
-btnPrev.onclick = () => {
-  todoId = todoId === 1 ? MAX_TODOS : todoId - 1;
-  loadTodo(todoId);
-};
-fetch('https://jsonplaceholder.typicode.com/todos')
-    .then(res => res.json())
-    .then(data => console.log("Все todos:", data))
-    .catch(err => console.error(err));
-
+firstCard(cardId)
+btnContainer.onclick = (event) => {
+    if (event.target.tagName.toLowerCase() === 'button') {
+        if (event.target.id === 'btn-next') {
+            cardId < 200 ? cardId++ : cardId = 1
+        } else if (event.target.id === 'btn-prev') {
+            cardId > 1 ? cardId-- : cardId = 200
+        }
+        firstCard(cardId)
+    }
+}
 
